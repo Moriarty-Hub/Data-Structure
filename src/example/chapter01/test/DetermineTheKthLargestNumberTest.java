@@ -6,18 +6,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import example.chapter01.DetermineTheKthLargestNumber;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import util.RandomIntegerArrayGenerator;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Scanner;
+import java.util.Random;
 
 public class DetermineTheKthLargestNumberTest {
 
-    private static final String ROOT_DIRECTORY = "src/data/";
-    private static final String FILE_NAME_OF_3000_RANDOM_INTEGERS = "integers-3000.txt";
-    private static final String FILE_NAME_OF_6000_RANDOM_INTEGERS = "integers-6000.txt";
+    private static final int AMOUNT_OF_RANDOM_NUMBER = 5000;
+    private static int[] RANDOM_NUMBER_ARRAY;
+    private static int[] DESCENDING_SORTED_ARRAY;
 
     private static Method reverseIntArray;
     private static Method insertNumberIntoSortedArray;
@@ -29,170 +28,66 @@ public class DetermineTheKthLargestNumberTest {
 
         reverseIntArray.setAccessible(true);
         insertNumberIntoSortedArray.setAccessible(true);
+
+        RandomIntegerArrayGenerator generator = new RandomIntegerArrayGenerator(AMOUNT_OF_RANDOM_NUMBER);
+        RANDOM_NUMBER_ARRAY = generator.getRandomArray();
+        DESCENDING_SORTED_ARRAY = generator.getDescendingSortedArray();
     }
 
-    private boolean testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(String filename, int amountOfNumbers,
-                                                                           int k, int expectedResult, int algorithm) {
+    private boolean testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(int k, int expectedResult, int algorithm) {
 
-        int[] numbers = new int[amountOfNumbers];
-        File file = new File(ROOT_DIRECTORY + filename);
-        try {
-            Scanner in = new Scanner(file);
-            for (int i = 0; i < amountOfNumbers; i++) {
-                numbers[i] = in.nextInt();
-            }
-            DetermineTheKthLargestNumber determineTheKthLargestNumber = new DetermineTheKthLargestNumber(numbers, k);
-            if (algorithm == 1) {
-                determineTheKthLargestNumber.calculateWithAlgorithm1();
-            } else {
-                determineTheKthLargestNumber.calculateWithAlgorithm2();
-            }
-            return determineTheKthLargestNumber.getResult() == expectedResult;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        DetermineTheKthLargestNumber determineTheKthLargestNumber = new DetermineTheKthLargestNumber(RANDOM_NUMBER_ARRAY, k);
+        if (algorithm == 1) {
+            determineTheKthLargestNumber.calculateWithAlgorithm1();
+        } else {
+            determineTheKthLargestNumber.calculateWithAlgorithm2();
         }
-        return false;
+        return determineTheKthLargestNumber.getResult() == expectedResult;
+
     }
 
-
     @Test
-    public void test1CalculateWithAlgorithm1() {
-        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(FILE_NAME_OF_3000_RANDOM_INTEGERS,
-                3000, 1, 2145930509, 1);
+    public void boundaryTest1OfCalculateWithAlgorithm1() {
+        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(1, DESCENDING_SORTED_ARRAY[0], 1);
         assertTrue(result);
     }
 
     @Test
-    public void test2CalculateWithAlgorithm1() {
-        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(FILE_NAME_OF_3000_RANDOM_INTEGERS,
-                3000, 3000, -2145177577, 1);
+    public void boundaryTest2OfCalculateWithAlgorithm1() {
+        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(AMOUNT_OF_RANDOM_NUMBER, DESCENDING_SORTED_ARRAY[AMOUNT_OF_RANDOM_NUMBER-1], 1);
         assertTrue(result);
     }
 
     @Test
-    public void test3CalculateWithAlgorithm1() {
-        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(FILE_NAME_OF_3000_RANDOM_INTEGERS,
-                3000, 813, 968735089, 1);
+    public void testCalculateWithAlgorithm1() {
+        Random random = new Random();
+        for (int i = 0; i < 100; i++) {
+            int randomIndex = random.nextInt(AMOUNT_OF_RANDOM_NUMBER) + 1;
+            boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(randomIndex, DESCENDING_SORTED_ARRAY[randomIndex-1], 1);
+            assertTrue(result);
+        }
+    }
+
+    @Test
+    public void boundaryTest1OfCalculateWithAlgorithm2() {
+        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(1, DESCENDING_SORTED_ARRAY[0], 2);
         assertTrue(result);
     }
 
     @Test
-    public void test4CalculateWithAlgorithm1() {
-        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(FILE_NAME_OF_3000_RANDOM_INTEGERS,
-                3000, 1423, 94115109, 1);
+    public void boundaryTest2OfCalculateWithAlgorithm2() {
+        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(AMOUNT_OF_RANDOM_NUMBER, DESCENDING_SORTED_ARRAY[AMOUNT_OF_RANDOM_NUMBER-1], 2);
         assertTrue(result);
     }
 
     @Test
-    public void test5CalculateWithAlgorithm1() {
-        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(FILE_NAME_OF_3000_RANDOM_INTEGERS,
-                3000, 2211, -1012733290, 1);
-        assertTrue(result);
-    }
-
-    @Test
-    public void test6CalculateWithAlgorithm1() {
-        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(FILE_NAME_OF_6000_RANDOM_INTEGERS,
-                6000, 1, 2146337762, 1);
-        assertTrue(result);
-    }
-
-    @Test
-    public void test7CalculateWithAlgorithm1() {
-        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(FILE_NAME_OF_6000_RANDOM_INTEGERS,
-                6000, 6000, -2146288019, 1);
-        assertTrue(result);
-    }
-
-    @Test
-    public void test8CalculateWithAlgorithm1() {
-        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(FILE_NAME_OF_6000_RANDOM_INTEGERS,
-                6000, 1082, 1371032475, 1);
-        assertTrue(result);
-    }
-
-    @Test
-    public void test9CalculateWithAlgorithm1() {
-        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(FILE_NAME_OF_6000_RANDOM_INTEGERS,
-                6000, 3062, -22139626, 1);
-        assertTrue(result);
-    }
-
-    @Test
-    public void test10CalculateWithAlgorithm1() {
-        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(FILE_NAME_OF_6000_RANDOM_INTEGERS,
-                6000, 4918, -1385165526, 1);
-        assertTrue(result);
-    }
-
-    @Test
-    public void test1CalculateWithAlgorithm2() {
-        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(FILE_NAME_OF_3000_RANDOM_INTEGERS,
-                3000, 1, 2145930509, 2);
-        assertTrue(result);
-    }
-
-    @Test
-    public void test2CalculateWithAlgorithm2() {
-        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(FILE_NAME_OF_3000_RANDOM_INTEGERS,
-                3000, 3000, -2145177577, 2);
-        assertTrue(result);
-    }
-
-    @Test
-    public void test3CalculateWithAlgorithm2() {
-        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(FILE_NAME_OF_3000_RANDOM_INTEGERS,
-                3000, 813, 968735089, 2);
-        assertTrue(result);
-    }
-
-    @Test
-    public void test4CalculateWithAlgorithm2() {
-        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(FILE_NAME_OF_3000_RANDOM_INTEGERS,
-                3000, 1423, 94115109, 2);
-        assertTrue(result);
-    }
-
-    @Test
-    public void test5CalculateWithAlgorithm2() {
-        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(FILE_NAME_OF_3000_RANDOM_INTEGERS,
-                3000, 2211, -1012733290, 2);
-        assertTrue(result);
-    }
-
-    @Test
-    public void test6CalculateWithAlgorithm2() {
-        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(FILE_NAME_OF_6000_RANDOM_INTEGERS,
-                6000, 1, 2146337762, 2);
-        assertTrue(result);
-    }
-
-    @Test
-    public void test7CalculateWithAlgorithm2() {
-        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(FILE_NAME_OF_6000_RANDOM_INTEGERS,
-                6000, 6000, -2146288019, 2);
-        assertTrue(result);
-    }
-
-    @Test
-    public void test8CalculateWithAlgorithm2() {
-        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(FILE_NAME_OF_6000_RANDOM_INTEGERS,
-                6000, 1082, 1371032475, 2);
-        assertTrue(result);
-    }
-
-    @Test
-    public void test9CalculateWithAlgorithm2() {
-        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(FILE_NAME_OF_6000_RANDOM_INTEGERS,
-                6000, 3062, -22139626, 2);
-        assertTrue(result);
-    }
-
-    @Test
-    public void test10CalculateWithAlgorithm2() {
-        boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(FILE_NAME_OF_6000_RANDOM_INTEGERS,
-                6000, 4918, -1385165526, 2);
-        assertTrue(result);
+    public void testCalculateWithAlgorithm2() {
+        Random random = new Random();
+        for (int i = 0; i < 100; i++) {
+            int randomIndex = random.nextInt(AMOUNT_OF_RANDOM_NUMBER) + 1;
+            boolean result = testDetermineTheKthLargestNumberWithSpecifiedAlgorithm(randomIndex, DESCENDING_SORTED_ARRAY[randomIndex-1], 2);
+            assertTrue(result);
+        }
     }
 
     @Test
