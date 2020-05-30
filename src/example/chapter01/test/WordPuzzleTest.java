@@ -1,7 +1,6 @@
 package example.chapter01.test;
 
 import example.chapter01.WordPuzzle;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
@@ -11,21 +10,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WordPuzzleTest {
 
-    private final char[][] sampleWordPuzzle1 = {{'t', 'h', 'i', 's'},
-                                                {'w', 'a', 't', 's'},
-                                                {'o', 'a', 'h', 'g'},
-                                                {'f', 'g', 'd', 't'}};
-    private final String[] sampleAnswer1 = {"this", "two", "fat", "that"};
-
-    @Disabled
     @Test
     public void test1WordPuzzle() {
+        char[][] sampleWordPuzzle1 = {{'t', 'h', 'i', 's'},
+                                      {'w', 'a', 't', 's'},
+                                      {'o', 'a', 'h', 'g'},
+                                      {'f', 'g', 'd', 't'}};
+        String[] sampleAnswer1 = {"a", "at", "of", "it", "hat", "this", "two", "fat", "that"};
         WordPuzzle wordPuzzle = new WordPuzzle(sampleWordPuzzle1);
-        Set<String> wordList = wordPuzzle.getWordList();
-        assertEquals(sampleAnswer1.length, wordList.size());
-        for (String word : sampleAnswer1) {
-            assertTrue(wordList.contains(word));
-        }
+        testSearch(sampleWordPuzzle1, sampleAnswer1);
     }
 
     private void testSearch(char[][] inputWordPuzzle, String[] expectedWordList) {
@@ -125,7 +118,7 @@ public class WordPuzzleTest {
                                     {'#', '#', 't', '#'},
                                     {'#', 'a', '#', '#'},
                                     {'d', '#', '#', '#'}};
-        String[] expectedWordList = {"a", "ate", "date"};
+        String[] expectedWordList = {"a", "at", "ate", "date"};
         testSearch(inputWordPuzzle, expectedWordList);
     }
 

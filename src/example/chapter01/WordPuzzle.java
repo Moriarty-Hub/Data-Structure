@@ -9,8 +9,8 @@ public class WordPuzzle {
     private final char[][] puzzle;
     private final int row;
     private final int column;
-    private Set<String> wordList;
-    private List<String> dictionary;
+    private final Set<String> wordList;
+    private final List<String> dictionary;
 
     private static final String DICTIONARY_FILENAME = "src/data/dictionary.txt";
 
@@ -87,27 +87,83 @@ public class WordPuzzle {
     }
 
     private void searchLeft(int startRow, int startColumn) {
-
+        int endColumn = startColumn;
+        StringBuilder word = new StringBuilder();
+        while (endColumn != -1) {
+            word.append(puzzle[startRow][endColumn]);
+            if (isWordExist(word.toString())) {
+                wordList.add(word.toString());
+            }
+            endColumn--;
+        }
     }
 
     private void searchRight(int startRow, int startColumn) {
-
+        int endColumn = startColumn;
+        StringBuilder word = new StringBuilder();
+        while (endColumn != column) {
+            word.append(puzzle[startRow][endColumn]);
+            if (isWordExist(word.toString())) {
+                wordList.add(word.toString());
+            }
+            endColumn++;
+        }
     }
 
     private void searchTopLeft(int startRow, int startColumn) {
-
+        int endRow = startRow;
+        int endColumn = startColumn;
+        StringBuilder word = new StringBuilder();
+        while(endRow != -1 && endColumn != -1) {
+            word.append(puzzle[endRow][endColumn]);
+            if (isWordExist(word.toString())) {
+                wordList.add(word.toString());
+            }
+            endRow--;
+            endColumn--;
+        }
     }
 
     private void searchTopRight(int startRow, int startColumn) {
-
+        int endRow = startRow;
+        int endColumn = startColumn;
+        StringBuilder word = new StringBuilder();
+        while(endRow != -1 && endColumn != column) {
+            word.append(puzzle[endRow][endColumn]);
+            if (isWordExist(word.toString())) {
+                wordList.add(word.toString());
+            }
+            endRow--;
+            endColumn++;
+        }
     }
 
     private void searchBottomLeft(int startRow, int startColumn) {
-
+        int endRow = startRow;
+        int endColumn = startColumn;
+        StringBuilder word = new StringBuilder();
+        while (endRow != row && endColumn != -1) {
+            word.append(puzzle[endRow][endColumn]);
+            if (isWordExist(word.toString())) {
+                wordList.add(word.toString());
+            }
+            endRow++;
+            endColumn--;
+        }
     }
 
     private void searchBottomRight(int startRow, int startColumn) {
-
+        int endRow = startRow;
+        int endColumn = startColumn;
+        StringBuilder word = new StringBuilder();
+        while (endRow != row && endColumn != column) {
+            word.append(puzzle[endRow][endColumn]);
+            if (isWordExist(word.toString())) {
+                wordList.add(word.toString());
+            }
+            endRow++;
+            endColumn++;
+        }
     }
 
     private boolean isWordExist(String word) {
