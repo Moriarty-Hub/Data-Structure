@@ -17,7 +17,6 @@ public class WordPuzzleTest {
                                       {'o', 'a', 'h', 'g'},
                                       {'f', 'g', 'd', 't'}};
         String[] sampleAnswer1 = {"a", "at", "of", "it", "hat", "this", "two", "fat", "that"};
-        WordPuzzle wordPuzzle = new WordPuzzle(sampleWordPuzzle1);
         testSearch(sampleWordPuzzle1, sampleAnswer1);
     }
 

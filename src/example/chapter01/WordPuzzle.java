@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
+/**
+ * 这个类要实现的功能是从一个由英文字母组成的二维数组中找出所有的单词，组成单词的字符必须是连续的，方向可以是横、竖或者斜着
+ * 比如在WordPuzzleTest.java这个文件中第15行的二维数组里可以找到的单词就是"this"（从（0,0)到(0,3)），"hat"（从(2,2)到(0,0)）等等
+ */
 public class WordPuzzle {
 
     private final char[][] puzzle;
