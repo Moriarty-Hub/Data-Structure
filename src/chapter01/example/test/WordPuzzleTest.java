@@ -1,6 +1,6 @@
-package example.chapter01.test;
+package chapter01.example.test;
 
-import example.chapter01.WordPuzzle;
+import chapter01.example.WordPuzzle;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;

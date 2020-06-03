@@ -1,9 +1,9 @@
-package example.chapter01.test;
+package chapter01.example.test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import example.chapter01.DetermineTheKthLargestNumber;
+import chapter01.example.DetermineTheKthLargestNumber;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import util.RandomIntegerArrayGenerator;
