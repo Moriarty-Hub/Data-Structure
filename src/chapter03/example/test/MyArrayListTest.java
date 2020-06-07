@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -80,10 +81,10 @@ public class MyArrayListTest {
     }
 
     @Test
-    public void test4EnsureCapacity() {
-        assertEquals(10, sampleArrayList.size());
+    public void test4EnsureCapacity() throws IllegalAccessException {
+        assertEquals(10, privateFieldCapacity.get(sampleArrayList));
         sampleArrayList.ensureCapacity(10);
-        assertEquals(10, sampleArrayList.size());
+        assertEquals(10, privateFieldCapacity.get(sampleArrayList));
     }
 
     @Test
@@ -100,13 +101,13 @@ public class MyArrayListTest {
 
     @Test
     public void test1Set() throws IllegalAccessException {
-        assertEquals(9, ((int[])privateFieldArray.get(sampleArrayList))[0]);
+        assertEquals(9, ((Object[])privateFieldArray.get(sampleArrayList))[0]);
         sampleArrayList.set(0, 3);
-        assertEquals(3, ((int[])privateFieldArray.get(sampleArrayList))[0]);
+        assertEquals(3, ((Object[])privateFieldArray.get(sampleArrayList))[0]);
 
-        assertEquals(1, ((int[])privateFieldArray.get(sampleArrayList))[5]);
+        assertEquals(1, ((Object[])privateFieldArray.get(sampleArrayList))[5]);
         sampleArrayList.set(5, 4);
-        assertEquals(4, ((int[])privateFieldArray.get(sampleArrayList))[5]);
+        assertEquals(4, ((Object[])privateFieldArray.get(sampleArrayList))[5]);
     }
 
     @Test
@@ -133,7 +134,7 @@ public class MyArrayListTest {
         assertEquals(10, privateFieldCapacity.get(sampleArrayList));
         sampleArrayList.clear();
         assertEquals(0, privateFieldSize.get(sampleArrayList));
-        assertEquals(10, privateFieldSize.get(sampleArrayList));
+        assertEquals(10, privateFieldCapacity.get(sampleArrayList));
 
         assertEquals(0, privateFieldSize.get(emptyArrayList));
         assertEquals(10, privateFieldCapacity.get(emptyArrayList));
@@ -147,13 +148,13 @@ public class MyArrayListTest {
     @Test
     public void test1RemoveByIndex() throws IllegalAccessException {
         assertEquals(6, privateFieldSize.get(sampleArrayList));
-        assertArrayEquals(new int[]{9, 8, 0, 2, 2, 1}, (int[]) privateFieldArray.get(sampleArrayList));
+        assertArrayEquals(new Integer[]{9, 8, 0, 2, 2, 1}, Arrays.copyOf((Object[]) privateFieldArray.get(sampleArrayList), 6));
         assertEquals(9, sampleArrayList.remove(0));
         assertEquals(5, privateFieldSize.get(sampleArrayList));
-        assertArrayEquals(new int[]{8, 0, 2, 2, 1}, (int[]) privateFieldArray.get(sampleArrayList));
+        assertArrayEquals(new Integer[]{8, 0, 2, 2, 1}, Arrays.copyOf((Object[]) privateFieldArray.get(sampleArrayList), 5));
         assertEquals(1, sampleArrayList.remove(4));
         assertEquals(4, privateFieldSize.get(sampleArrayList));
-        assertArrayEquals(new int[]{8, 0, 2, 2}, (int[]) privateFieldArray.get(sampleArrayList));
+        assertArrayEquals(new Integer[]{8, 0, 2, 2}, Arrays.copyOf((Object[]) privateFieldArray.get(sampleArrayList), 4));
     }
 
     @Test
@@ -166,34 +167,35 @@ public class MyArrayListTest {
     @Test
     public void test1RemoveByObject() throws IllegalAccessException {
         assertEquals(6, privateFieldSize.get(sampleArrayList));
-        assertArrayEquals(new int[]{9, 8, 0, 2, 2, 1}, (int[]) privateFieldArray.get(sampleArrayList));
+        assertArrayEquals(new Integer[]{9, 8, 0, 2, 2, 1}, Arrays.copyOf((Object[]) privateFieldArray.get(sampleArrayList), 6));
         assertEquals(0, sampleArrayList.remove(Integer.valueOf(9)));
         assertEquals(5, privateFieldSize.get(sampleArrayList));
-        assertArrayEquals(new int[]{8, 0, 2, 2, 1}, (int[]) privateFieldArray.get(sampleArrayList));
+        assertArrayEquals(new Integer[]{8, 0, 2, 2, 1}, Arrays.copyOf((Object[]) privateFieldArray.get(sampleArrayList), 5));
         assertEquals(2, sampleArrayList.remove(Integer.valueOf(2)));
         assertEquals(4, privateFieldSize.get(sampleArrayList));
-        assertArrayEquals(new int[]{8, 0, 2, 1}, (int[]) privateFieldArray.get(sampleArrayList));
+        assertArrayEquals(new Integer[]{8, 0, 2, 1}, Arrays.copyOf((Object[]) privateFieldArray.get(sampleArrayList), 4));
     }
 
     @Test
     public void test2RemoveByObject() throws IllegalAccessException {
         assertEquals(6, privateFieldSize.get(sampleArrayList));
-        assertArrayEquals(new int[]{9, 8, 0, 2, 2, 1}, (int[]) privateFieldArray.get(sampleArrayList));
+        assertArrayEquals(new Integer[]{9, 8, 0, 2, 2, 1}, Arrays.copyOf((Object[]) privateFieldArray.get(sampleArrayList), 6));
         assertEquals(-1, sampleArrayList.remove(Integer.valueOf(3)));
         assertEquals(6, privateFieldSize.get(sampleArrayList));
-        assertArrayEquals(new int[]{9, 8, 0, 2, 2, 1}, (int[]) privateFieldArray.get(sampleArrayList));
+        assertArrayEquals(new Integer[]{9, 8, 0, 2, 2, 1}, Arrays.copyOf((Object[]) privateFieldArray.get(sampleArrayList), 6));
         assertEquals(-1, sampleArrayList.remove(Integer.valueOf(7)));
         assertEquals(6, privateFieldSize.get(sampleArrayList));
-        assertArrayEquals(new int[]{9, 8, 0, 2, 2, 1}, (int[]) privateFieldArray.get(sampleArrayList));
+        assertArrayEquals(new Integer[]{9, 8, 0, 2, 2, 1}, Arrays.copyOf((Object[]) privateFieldArray.get(sampleArrayList), 6));
+
     }
 
     @Test
     public void testAddWithoutIndex() throws IllegalAccessException {
         assertEquals(6, privateFieldSize.get(sampleArrayList));
-        assertArrayEquals(new int[]{9, 8, 0, 2, 2, 1}, (int[]) privateFieldArray.get(sampleArrayList));
+        assertArrayEquals(new Integer[]{9, 8, 0, 2, 2, 1}, Arrays.copyOf((Object[]) privateFieldArray.get(sampleArrayList), 6));
         sampleArrayList.add(3);
         assertEquals(7, privateFieldSize.get(sampleArrayList));
-        assertArrayEquals(new int[]{9, 8, 0, 2, 2, 1, 3}, (int[]) privateFieldArray.get(sampleArrayList));
+        assertArrayEquals(new Integer[]{9, 8, 0, 2, 2, 1, 3}, Arrays.copyOf((Object[]) privateFieldArray.get(sampleArrayList), 7));
 
         sampleArrayList.add(4);
         sampleArrayList.add(5);
@@ -202,35 +204,35 @@ public class MyArrayListTest {
         sampleArrayList.add(7);
         assertEquals(20, privateFieldCapacity.get(sampleArrayList));
         assertEquals(11, privateFieldSize.get(sampleArrayList));
-        assertArrayEquals(new int[]{9, 8, 0, 2, 2, 1, 3, 4, 5, 6, 7}, (int[]) privateFieldArray.get(sampleArrayList));
+        assertArrayEquals(new Integer[]{9, 8, 0, 2, 2, 1, 3, 4, 5, 6, 7}, Arrays.copyOf((Object[]) privateFieldArray.get(sampleArrayList), 11));
 
         assertEquals(0, privateFieldSize.get(emptyArrayList));
         emptyArrayList.add(1);
         assertEquals(1, privateFieldSize.get(emptyArrayList));
-        assertArrayEquals(new int[]{1}, (int[]) privateFieldArray.get(emptyArrayList));
+        assertArrayEquals(new Integer[]{1}, Arrays.copyOf((Object[]) privateFieldArray.get(emptyArrayList), 1));
     }
 
     @Test
     public void test1AddWithIndex() throws IllegalAccessException {
         assertEquals(6, privateFieldSize.get(sampleArrayList));
-        assertArrayEquals(new int[]{9, 8, 0, 2, 2, 1}, (int[]) privateFieldArray.get(sampleArrayList));
+        assertArrayEquals(new Integer[]{9, 8, 0, 2, 2, 1}, Arrays.copyOf((Object[]) privateFieldArray.get(sampleArrayList), 6));
         sampleArrayList.add(0, 7);
         assertEquals(7, privateFieldSize.get(sampleArrayList));
-        assertArrayEquals(new int[]{7, 9, 8, 0, 2, 2, 1}, (int[]) privateFieldArray.get(sampleArrayList));
+        assertArrayEquals(new Integer[]{7, 9, 8, 0, 2, 2, 1}, Arrays.copyOf((Object[]) privateFieldArray.get(sampleArrayList), 7));
         sampleArrayList.add(7, 3);
         assertEquals(8, privateFieldSize.get(sampleArrayList));
-        assertArrayEquals(new int[]{7, 9, 8, 0, 2, 2, 1, 3}, (int[]) privateFieldArray.get(sampleArrayList));
+        assertArrayEquals(new Integer[]{7, 9, 8, 0, 2, 2, 1, 3}, Arrays.copyOf((Object[]) privateFieldArray.get(sampleArrayList), 8));
 
         assertEquals(0, privateFieldSize.get(emptyArrayList));
         emptyArrayList.add(0, 1);
         assertEquals(1, privateFieldSize.get(emptyArrayList));
-        assertArrayEquals(new int[]{1}, (int[]) privateFieldArray.get(emptyArrayList));
+        assertArrayEquals(new Integer[]{1}, Arrays.copyOf((Object[]) privateFieldArray.get(emptyArrayList), 1));
     }
 
     @Test
     public void test2AddWithIndex() {
         assertThrows(IndexOutOfBoundsException.class, () -> sampleArrayList.add(-1, 7));
-        assertThrows(IndexOutOfBoundsException.class, () -> sampleArrayList.add(6, 8));
+        assertThrows(IndexOutOfBoundsException.class, () -> sampleArrayList.add(7, 8));
         assertThrows(IndexOutOfBoundsException.class, () -> emptyArrayList.add(1, 2));
     }
 
